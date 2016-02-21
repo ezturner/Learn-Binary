@@ -6,4 +6,17 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="between_levels_id">ca-app-pub-4175241364211124/6773561694</string>
 
+
+    <string name="store">Store</string>
+    <string name="practice">Practice</string>
+    <string name="tools">Tools</string>
+    <string name="learn_binary">Learn Binary</string>
+    <string name="about">About</string>
+    <string name="difficulty">Difficulty:</string>
+    <string name="easy">Easy</string>
+    <string name="moderate">Moderate</string>
+    <string name="hard">Hard</string>
+    <string name="practice_selection_question">What would you like to practice?</string>
+    <string name="binary">Binary</string>
+    <string name="hex">Hex</string>
 </resources>

@@ -10,7 +10,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -81,7 +80,7 @@ public class HexBlitz extends Activity{
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.hex_blitz);
+        setContentView(R.layout.activity_hex_blitz);
 
         initializeVariables();
     }

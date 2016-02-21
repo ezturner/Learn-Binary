@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/backgroundGrey"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/difficulty"
+        android:id="@+id/textView"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:longClickable="false"
+        android:fontFamily="Roboto"
+        android:layout_marginBottom="10dp"
+        android:textSize="56sp" />
+
+        <LinearLayout
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+        <Button
+            android:background="@color/buttonGrey"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/practice"
+            android:id="@+id/practice_button"
+            android:singleLine="true"
+            android:onClick="onClick"
+            android:minWidth="100dp"
+            android:tag="0"/>
+
+        <Button
+            android:background="@color/buttonGrey"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/easy"
+            android:id="@+id/easy_button"
+            android:onClick="onClick"
+            android:minWidth="100dp"
+            android:tag="1" />
+
+        <Button
+            android:background="@color/buttonGrey"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/moderate_button"
+            android:text="@string/moderate"
+            android:onClick="onClick"
+            android:minWidth="100dp"
+            android:tag="2" />
+
+        <Button
+            android:background="@color/buttonGrey"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hard_button"
+            android:text="@string/hard"
+            android:onClick="onClick"
+            android:minWidth="100dp"
+            android:tag="3" />
+
+    </LinearLayout>
+
+</LinearLayout>

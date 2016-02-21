@@ -2,7 +2,6 @@ package com.learnbinary;
 
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -67,7 +66,7 @@ public class IAPActivity extends Activity {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.iap_buy_screen);
+        setContentView(R.layout.activity_iap_buy_screen);
 
         Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:background="@color/backgroundGrey"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/difficulty"
+        android:id="@+id/textView"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:longClickable="false"
+        android:fontFamily="Roboto"
+        android:layout_marginBottom="10dp"
+        android:textSize="56sp" />
+
+    <LinearLayout
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@color/buttonGrey"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="6dp">
+
+            <Button
+                android:background="@color/buttonGrey"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/practice"
+                android:id="@+id/practice_button"
+                android:singleLine="true"
+                android:onClick="onClick"
+                android:minWidth="100dp"
+                android:tag="0"/>
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@color/buttonGrey"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="6dp">
+            <Button
+                android:background="@color/buttonGrey"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/easy"
+                android:id="@+id/easy_button"
+                android:onClick="onClick"
+                android:minWidth="100dp"
+                android:tag="1" />
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@color/buttonGrey"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="6dp">
+            <Button
+                android:background="@color/buttonGrey"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/moderate_button"
+                android:text="@string/moderate"
+                android:onClick="onClick"
+                android:minWidth="100dp"
+                android:tag="2" />
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@color/buttonGrey"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="6dp">
+            <Button
+                android:background="@color/buttonGrey"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hard_button"
+                android:text="@string/hard"
+                android:onClick="onClick"
+                android:minWidth="100dp"
+                android:tag="3" />
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</LinearLayout>

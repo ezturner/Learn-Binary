@@ -21,7 +21,7 @@ public class DifficultySelection extends Activity{
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.difficulty_selection);
+        setContentView(R.layout.activity_difficulty_selection);
     }
 
     public void onClick(View v){

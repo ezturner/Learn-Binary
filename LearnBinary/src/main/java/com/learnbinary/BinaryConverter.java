@@ -1,18 +1,11 @@
 package com.learnbinary;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnTouchListener;
 import android.widget.EditText;
-
-import java.util.ArrayList;
 
 /**
  * Created by Ethan on 2/19/14.
@@ -38,7 +31,7 @@ public class BinaryConverter extends Activity{
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.binary_converter);
+        setContentView(R.layout.activity_binary_converter);
 
         binaryText = (EditText) findViewById(getResources().getIdentifier("binaryText", "id", getPackageName()));
         numberText = (EditText) findViewById(getResources().getIdentifier("numberText", "id", getPackageName()));

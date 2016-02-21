@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View;
-import android.content.Intent;
 
 /**
  * Created by Ethan on 11/25/13.
@@ -22,7 +20,8 @@ public class About  extends Activity {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.about);
-
+        setContentView(R.layout.activity_about);
     }
+
+
 }

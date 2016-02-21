@@ -6,19 +6,15 @@ import com.learnbinary.util.SystemUiHider;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.Timer;
 import java.util.ArrayList;
@@ -29,7 +25,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.AdListener;
 
 /**
@@ -117,7 +112,7 @@ public class BinaryBlitz extends Activity {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.layout_blitz);
+        setContentView(R.layout.activity_layout_blitz);
 
         random=new Random();
 

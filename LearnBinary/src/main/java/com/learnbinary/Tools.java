@@ -21,7 +21,7 @@ public class Tools extends Activity{
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.tools);
+        setContentView(R.layout.activity_tools);
     }
 
     public void toBinaryConverter(View v){
