@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="false"
+    android:id="@+id/difficulty_selection"
+    android:baselineAligned="false">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Difficulty:"
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:longClickable="false"
+            android:fontFamily="Roboto"
+            android:layout_marginBottom="10dp"
+            android:textSize="56sp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Practice"
+            android:id="@+id/button"
+            android:layout_gravity="center_horizontal"
+            android:singleLine="true"
+            android:onClick="onClick"
+            android:minWidth="100dp"
+            android:tag="0"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Easy"
+            android:id="@+id/button2"
+            android:layout_gravity="center_horizontal"
+            android:onClick="onClick"
+            android:minWidth="100dp"
+            android:tag="1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button3"
+            android:layout_gravity="center_horizontal"
+            android:text="Moderate"
+            android:onClick="onClick"
+            android:minWidth="100dp"
+            android:tag="2" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button4"
+            android:layout_gravity="center_horizontal"
+            android:text="Hard"
+            android:onClick="onClick"
+            android:minWidth="100dp"
+            android:tag="3" />
+
+    </LinearLayout>
+
+</LinearLayout>
