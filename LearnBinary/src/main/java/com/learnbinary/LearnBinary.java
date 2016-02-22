@@ -3,6 +3,7 @@ package com.learnbinary;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+import com.learnbinary.user.UserPreferences;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -15,5 +16,6 @@ public class LearnBinary extends Application {
     public void onCreate(){
         super.onCreate();
         Fabric.with(this, new Crashlytics());
+        new UserPreferences(getApplicationContext());
     }
 }

@@ -19,4 +19,12 @@
     <string name="practice_selection_question">What would you like to practice?</string>
     <string name="binary">Binary</string>
     <string name="hex">Hex</string>
+
+    <string name="start">Start</string>
+    <string name="submit">Submit</string>
+    <string name="help">Help</string>
+
+    <string name="default_level">Level 0</string>
+    <string name="level">Level </string>
+    <string name="zero">0</string>
 </resources>

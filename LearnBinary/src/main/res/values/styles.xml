@@ -12,10 +12,10 @@
         <item name="colorControlNormal">#c5c5c5</item>
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/colorAccent</item>
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/backgroundGrey</item>
         <item name="android:actionMenuTextColor">@color/white</item>
         <item name="android:textColor">@color/secondaryText</item>
         <item name="android:textColorPrimary">@color/white</item>

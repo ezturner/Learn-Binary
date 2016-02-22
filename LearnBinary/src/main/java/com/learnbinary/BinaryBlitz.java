@@ -11,7 +11,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.RemoteException;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +35,12 @@ import com.google.android.gms.ads.AdListener;
  */
 public class BinaryBlitz extends Activity {
 
+    private final static String LOG_TAG = BinaryBlitz.class.getSimpleName();
+    private static int INTERVAL_PRACTICE = 3000;
+    private static int INTERVAL_EASY = 2500;
+    private static int INTERVAL_MODERATE = 2000;
+    private static int INTERVAL_HARD  = 1500;
+
 
     private SystemUiHider mSystemUiHider;
 
@@ -42,14 +48,9 @@ public class BinaryBlitz extends Activity {
 
     private ArrayList<Button> bottomButtons;
 
-    private TextView topNumber;
-    private TextView bottomNumber;
-
     InterstitialAd mInterstitialAd;
     private int targetNumber;
     private int playerNumber;
-
-    private int etIsABitch = 69;
 
     private String binarySequence;
 
@@ -72,7 +73,7 @@ public class BinaryBlitz extends Activity {
 
     private TextView playerNumberDisplay;
     private TextView targetNumberDisplay;
-    private TextView victoryDisplay;
+    private TextView levelView;
     private TextView victoryMessage;
     private TextView difficultyText;
 
@@ -116,35 +117,37 @@ public class BinaryBlitz extends Activity {
 
         random=new Random();
 
-        topButtons=new ArrayList<Button>();
+        topButtons = new ArrayList<>();
+        labels = new ArrayList<>();
+        bottomButtons=new ArrayList<>();
 
-        for(int i=1;i<9;i++){
-            topButtons.add((Button) findViewById(getResources().getIdentifier("topbutton" + i, "id", getPackageName())));
+        for(int i=0; i<8 ;i++){
+            // get top buttons
+            String buttonName = "top_button";
+            int id = getResources().getIdentifier(buttonName + i, "id", getPackageName());
+            topButtons.add((Button) findViewById(id));
+
+            // get bottom buttons
+            buttonName = "bottom_button";
+            id = getResources().getIdentifier(buttonName + i, "id", getPackageName());
+            bottomButtons.add((Button) findViewById(id));
+
+
+            String labelName = "label_number";
+            id = getResources().getIdentifier(labelName + i, "id", getPackageName());
+            labels.add((TextView)findViewById(id));
         }
 
-        bottomButtons=new ArrayList<Button>();
 
-        for(int i=1;i<9;i++){
-            bottomButtons.add((Button)findViewById(getResources().getIdentifier("bottomButton"+i, "id" , getPackageName())));
-        }
+        playerNumberDisplay=(TextView)findViewById(R.id.player_number_display);
+        targetNumberDisplay=(TextView)findViewById(R.id.target_number_display);
 
-        labels = new ArrayList<TextView>();
-
-        for(int i=0;i<8;i++){
-            labels.add((TextView)findViewById(getResources().getIdentifier("buttonNumber"+i, "id" , getPackageName())));
-        }
-
-        playerNumberDisplay=(TextView)findViewById(getResources().getIdentifier("playerNumberDisplay", "id" , getPackageName()));
-        targetNumberDisplay=(TextView)findViewById(getResources().getIdentifier("targetNumberDisplay", "id" , getPackageName()));
-
-        topNumber=(TextView)findViewById(getResources().getIdentifier("textView10", "id" , getPackageName()));
-        bottomNumber=(TextView)findViewById(getResources().getIdentifier("textView9","id", getPackageName()));
         playing = false;
 
-        victoryDisplay = (TextView)findViewById(getResources().getIdentifier("victoryText","id", getPackageName()));
-        victoryMessage = (TextView)findViewById(getResources().getIdentifier("victoryMessage","id", getPackageName()));
+        levelView = (TextView)findViewById(R.id.level_view);
+        victoryMessage = (TextView)findViewById(R.id.victory_view);
 
-        difficultyText = (TextView)findViewById(getResources().getIdentifier("difficultyText","id", getPackageName()));
+        difficultyText = (TextView)findViewById(R.id.difficulty_view);
 
         level = 0;
         vTimerRunning = false;
@@ -183,23 +186,24 @@ public class BinaryBlitz extends Activity {
 
         Intent i = this.getIntent();
         int flag = i.getFlags();
-        difficulty = flag;
-        switch(difficulty){
+        difficulty = 0;
+        // TODO : get from user prefs
+        switch (difficulty) {
             //Practice
             case 0:
-                baseInterval = 3000;
+                baseInterval = INTERVAL_PRACTICE;
                 break;
             //Easy
             case 1:
-                baseInterval = 2500;
+                baseInterval = INTERVAL_EASY;
                 break;
             //Moderate
             case 2:
-                baseInterval = 2000;
+                baseInterval = INTERVAL_MODERATE;
                 break;
             //Hard
             case 3:
-                baseInterval = 1500;
+                baseInterval = INTERVAL_HARD;
                 break;
         }
 
@@ -216,6 +220,7 @@ public class BinaryBlitz extends Activity {
 
         requestNewInterstitial();
 
+        /*
         Bundle ownedItems = null;
         try {
             ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
@@ -254,7 +259,7 @@ public class BinaryBlitz extends Activity {
             // if continuationToken != null, call getPurchases again
             // and pass in the token to retrieve more items
         }
-
+*/
     }
 
 
@@ -297,8 +302,10 @@ public class BinaryBlitz extends Activity {
             button.setText("0");
         }
 
-        for(TextView view : labels){
-            view.setTypeface(null,Typeface.NORMAL);
+        for(TextView label : labels){
+            if(label == null)
+                Log.d(LOG_TAG , "Label is null!");
+            label.setTypeface(null, Typeface.NORMAL);
         }
 
         playerNumberDisplay.setText("0");
@@ -311,16 +318,20 @@ public class BinaryBlitz extends Activity {
         targetNumber = random.nextInt(255);
         targetNumberDisplay.setText(""+targetNumber);
         binarySequence=Integer.toBinaryString(targetNumber);
+
         if(binarySequence.length()<8){
             for(int i=binarySequence.length();i<8;i++){
                 binarySequence = "0" + binarySequence;
             }
         }
+
         labels.get(0).setTypeface(null, Typeface.BOLD);
-        Button temp = topButtons.get(0);
+
+        Button temp = topButtons.get(7);
         String text = binarySequence.charAt(0)+"";
         temp.setText(text);
         setTimer();
+
         if(level > 20){
             vanishGoalTimer();
         }
@@ -414,7 +425,6 @@ public class BinaryBlitz extends Activity {
     }
 
     private int getInterval(){
-
         if(level<=100){
             return (int)(Math.pow(0.97,level % 20) * baseInterval);
         } else {
@@ -427,7 +437,8 @@ public class BinaryBlitz extends Activity {
     private void onUpdate(){
 
         if(playing){
-            Button temp = topButtons.get(iteration);
+            // TODO : replace with a method
+            Button temp = topButtons.get(7 - iteration);
             String tempS = binarySequence.charAt(iteration)+"";
 
             temp.setText(tempS);
@@ -463,10 +474,11 @@ public class BinaryBlitz extends Activity {
     }
 
     private void requestNewInterstitial() {
+        /*
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
 
-        mInterstitialAd.loadAd(adRequest);
+        mInterstitialAd.loadAd(adRequest);*/
     }
 
     private void endRound(){
@@ -517,7 +529,7 @@ public class BinaryBlitz extends Activity {
                 canSeeScore = true;
             }
 
-            victoryDisplay.setText("Level " + level);
+            levelView.setText("Level " + level);
 
             if(!canSeeScore){
                 playerNumberDisplay.setText(playerNumber + "");
