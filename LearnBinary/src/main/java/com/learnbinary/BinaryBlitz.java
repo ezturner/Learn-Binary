@@ -2,6 +2,7 @@ package com.learnbinary;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.InterstitialAd;
+import com.learnbinary.user.UserPreferences;
 import com.learnbinary.util.SystemUiHider;
 
 import android.content.Context;
@@ -11,7 +12,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +24,8 @@ import java.util.TimerTask;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
-import com.google.android.gms.ads.AdRequest;
+import android.widget.Toast;
+
 import com.google.android.gms.ads.AdListener;
 
 /**
@@ -36,46 +37,37 @@ import com.google.android.gms.ads.AdListener;
 public class BinaryBlitz extends Activity {
 
     private final static String LOG_TAG = BinaryBlitz.class.getSimpleName();
-    private static int INTERVAL_PRACTICE = 3000;
-    private static int INTERVAL_EASY = 2500;
-    private static int INTERVAL_MODERATE = 2000;
-    private static int INTERVAL_HARD  = 1500;
 
+    // The amount of
+    public static final int INTERVAL_PRACTICE = 3000, INTERVAL_EASY = 2500,
+            INTERVAL_MODERATE = 2000, INTERVAL_HARD  = 1500;
+
+    // The integer flags for various difficulties
+    public static final int PRACTICE = 0, EASY = 1,
+            MODERATE = 2, HARD = 3;
 
     private SystemUiHider mSystemUiHider;
 
-    private ArrayList<Button> topButtons;
+    private ArrayList<Button> topButtons, bottomButtons;
 
-    private ArrayList<Button> bottomButtons;
+    private InterstitialAd mInterstitialAd;
 
-    InterstitialAd mInterstitialAd;
-    private int targetNumber;
-    private int playerNumber;
+    private int targetNumber, playerNumber;
 
     private String binarySequence;
 
     private Random random;
 
-    private int iteration;
+    private int iteration, level, interval;
 
-    private int level;
+    private Timer timer, vanishTimer;
 
-    private int interval;
+    private boolean playing, isResumed;
 
-    private Timer timer;
-    private Timer vanishTimer;
+    private boolean ableToUnclick, canSeeScore, mShowAds, mLevelsUnlocked;
 
-    private boolean playing;
-    private boolean isResumed;
-
-    private boolean ableToUnclick;
-    private boolean canSeeScore;
-
-    private TextView playerNumberDisplay;
-    private TextView targetNumberDisplay;
-    private TextView levelView;
-    private TextView victoryMessage;
-    private TextView difficultyText;
+    private TextView playerNumberDisplay, targetNumberDisplay ,
+            levelView ,victoryMessage , difficultyText, previousLabel;
 
     final private String difficultyMessage = "Difficulty Increased : ";
     final private String vanishGoalMessage = "Goal Vanishes";
@@ -85,12 +77,7 @@ public class BinaryBlitz extends Activity {
 
     private OnTouchListener listener;
 
-    private int baseInterval;
-    private int difficulty;
-
-
-    private boolean mShowAds;
-    private boolean mLevelsUnlocked;
+    private int baseInterval, difficulty;
 
     private ArrayList<TextView> labels;
 
@@ -98,12 +85,18 @@ public class BinaryBlitz extends Activity {
 
     private Context mContext;
 
+    private UserPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         mContext = this;
         mShowAds = true;
         mLevelsUnlocked = false;
+
+        // Load the user preferences.
+        while(prefs == null)
+            prefs = UserPreferences.getPreferences();
 
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -115,7 +108,7 @@ public class BinaryBlitz extends Activity {
 
         setContentView(R.layout.activity_layout_blitz);
 
-        random=new Random();
+        random = new Random();
 
         topButtons = new ArrayList<>();
         labels = new ArrayList<>();
@@ -139,8 +132,8 @@ public class BinaryBlitz extends Activity {
         }
 
 
-        playerNumberDisplay=(TextView)findViewById(R.id.player_number_display);
-        targetNumberDisplay=(TextView)findViewById(R.id.target_number_display);
+        playerNumberDisplay = (TextView)findViewById(R.id.player_number_display);
+        targetNumberDisplay = (TextView)findViewById(R.id.target_number_display);
 
         playing = false;
 
@@ -172,7 +165,7 @@ public class BinaryBlitz extends Activity {
 
                     if(isPointInsideView(event.getRawX(), event.getRawY(), button) && !buttonsPressed.contains(Integer.parseInt((String)button.getTag()))){
                         if(ableToUnclick || !ableToUnclick && button.getText().equals("0")){
-                            onClick(button);
+                            BinaryBlitz.this.onTouch(button);
                             buttonsPressed.add(Integer.parseInt((String)button.getTag()));
                         }
                     }
@@ -189,20 +182,19 @@ public class BinaryBlitz extends Activity {
         difficulty = 0;
         // TODO : get from user prefs
         switch (difficulty) {
-            //Practice
-            case 0:
+            case PRACTICE:
                 baseInterval = INTERVAL_PRACTICE;
                 break;
-            //Easy
-            case 1:
+
+            case EASY:
                 baseInterval = INTERVAL_EASY;
                 break;
-            //Moderate
-            case 2:
+
+            case MODERATE:
                 baseInterval = INTERVAL_MODERATE;
                 break;
-            //Hard
-            case 3:
+
+            case HARD:
                 baseInterval = INTERVAL_HARD;
                 break;
         }
@@ -264,7 +256,7 @@ public class BinaryBlitz extends Activity {
 
 
     /**
-     * Determines if given points are inside view
+     * Determines if given points are inside view. Used for the swipe
      * @param x - x coordinate of point
      * @param y - y coordinate of point
      * @param view - view object to compare
@@ -285,28 +277,34 @@ public class BinaryBlitz extends Activity {
         }
     }
 
-    public void onPlay(View v){
-        if(playing){
+    /**
+     * The method used by the Start button to start playing. If the user is already playing the
+     * game then a Toast will be made instructing them.
+     * @param v
+     */
+    public void onStart(View v){
+        if(playing) {
+            Toast toast = Toast.makeText(this , "Press Submit before pressing play!", Toast.LENGTH_LONG);
+            toast.show();
             return;
         }
 
-        if(!difficultyText.getText().equals("")){
+
+        if(!difficultyText.getText().equals(""))
             difficultyText.setText("");
-        }
 
-        for(Button button : topButtons){
+        // clear the top button
+        for(Button button : topButtons)
             button.setText("");
-        }
 
-        for(Button button : bottomButtons){
+        // Set the bottom buttons' text to 0
+        for(Button button : bottomButtons)
             button.setText("0");
-        }
 
-        for(TextView label : labels){
-            if(label == null)
-                Log.d(LOG_TAG , "Label is null!");
+        //
+        for(TextView label : labels)
             label.setTypeface(null, Typeface.NORMAL);
-        }
+
 
         playerNumberDisplay.setText("0");
         victoryMessage.setText("");
@@ -319,11 +317,11 @@ public class BinaryBlitz extends Activity {
         targetNumberDisplay.setText(""+targetNumber);
         binarySequence=Integer.toBinaryString(targetNumber);
 
-        if(binarySequence.length()<8){
-            for(int i=binarySequence.length();i<8;i++){
+        if(binarySequence.length()<8)
+            for(int i=binarySequence.length();i<8;i++)
                 binarySequence = "0" + binarySequence;
-            }
-        }
+
+
 
         labels.get(0).setTypeface(null, Typeface.BOLD);
 
@@ -332,14 +330,11 @@ public class BinaryBlitz extends Activity {
         temp.setText(text);
         setTimer();
 
-        if(level > 20){
+        if(level > 20)
             vanishGoalTimer();
-        }
 
-        if(!canSeeScore){
+        if(!canSeeScore)
             playerNumberDisplay.setText("???");
-        }
-
 
     }
 
@@ -354,14 +349,11 @@ public class BinaryBlitz extends Activity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        onUpdate();
-                    }
+                runOnUiThread(() -> {
+                    onUpdate();
                 });
             }
-        },0,getInterval());
+        },getInterval() ,getInterval());
 
     }
 
@@ -372,19 +364,15 @@ public class BinaryBlitz extends Activity {
         vanishTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        targetNumberDisplay.setText("???");
-                        vanishTimer.purge();
-                        vanishTimer.cancel();
-                        vTimerRunning = false;
-                    }
+                runOnUiThread(() -> {
+                    targetNumberDisplay.setText("???");
+                    vanishTimer.purge();
+                    vanishTimer.cancel();
+                    vTimerRunning = false;
                 });
             }
         }, 3500);
     }
-
 
     public void onRestart(){
         super.onRestart();
@@ -397,7 +385,7 @@ public class BinaryBlitz extends Activity {
     public void onPause(){
         super.onPause();
         if(playing){
-           timer.cancel();
+            timer.cancel();
             timer.purge();
         }
     }
@@ -406,61 +394,75 @@ public class BinaryBlitz extends Activity {
         super.onStart();
     }
 
-    public void onClick(View v){
-        if(playing){
-            int id=Integer.parseInt((String)v.getTag());
-            int num=(int)Math.pow(2,id);
-            Button button=(Button) v;
-            if(button.getText().equals("0")){
-                button.setText("1");
-                this.playerNumber+=num;
-            } else if(ableToUnclick){
-                button.setText("0");
-                this.playerNumber-=num;
-            }
-            if(canSeeScore){
-                this.playerNumberDisplay.setText(playerNumber+"");
-            }
+    /**
+     * This method records the user swipes so that the buttons can be toggled.
+     * @param v
+     */
+    public void onTouch(View v){
+        if(!playing)
+            return;
+
+        int id=Integer.parseInt((String)v.getTag());
+        int num = (int) Math.pow(2,id);
+        Button button=(Button) v;
+        if(button.getText().equals("0")){
+            button.setText("1");
+            this.playerNumber+=num;
+        } else if(ableToUnclick){
+            button.setText("0");
+            this.playerNumber-=num;
         }
+
+        if(canSeeScore)
+            this.playerNumberDisplay.setText(playerNumber+"");
+
+
     }
 
+    /**
+     * Returns the interval in milliseconds between game steps
+     * @return  interval an int of the milliseconds between the steps
+     */
     private int getInterval(){
-        if(level<=100){
+        if(level<=100)
             return (int)(Math.pow(0.97,level % 20) * baseInterval);
-        } else {
-            return (int)(Math.pow(0.98,level - 100) * baseInterval);
-        }
+
+        return (int)(Math.pow(0.96,level - 100) * baseInterval);
+
     }
 
-    private TextView previousLabel;
-
+    /**
+     *
+     */
     private void onUpdate(){
 
-        if(playing){
-            // TODO : replace with a method
-            Button temp = topButtons.get(7 - iteration);
-            String tempS = binarySequence.charAt(iteration)+"";
+        if(!playing)
+            return;
 
-            temp.setText(tempS);
+        // TODO : replace with a method
+        Button temp = topButtons.get(7 - iteration);
+        String tempS = binarySequence.charAt(iteration)+"";
 
-            if(previousLabel != null)
-                previousLabel.setTypeface(null,Typeface.NORMAL);
+        temp.setText(tempS);
 
-            previousLabel = labels.get(iteration);
-            previousLabel.setTypeface(null, Typeface.BOLD);
+        if(previousLabel != null)
+            previousLabel.setTypeface(null,Typeface.NORMAL);
 
-            iteration++;
-            if(iteration == 8 && difficulty != 0){
-                endRound();
-            } else if(iteration == 8){
-                timer.cancel();
-                if(vTimerRunning){
-                    vTimerRunning = false;
-                    vanishTimer.cancel();
-                    vanishTimer.purge();
-                }
+        previousLabel = labels.get(iteration);
+        previousLabel.setTypeface(null, Typeface.BOLD);
+
+        iteration++;
+        if(iteration == 8 && difficulty != 0){
+            endRound();
+        } else if(iteration == 8){
+            timer.cancel();
+            if(vTimerRunning){
+                vTimerRunning = false;
+                vanishTimer.cancel();
+                vanishTimer.purge();
             }
         }
+
 
     }
     private void blankLabels(){
@@ -469,10 +471,24 @@ public class BinaryBlitz extends Activity {
         }
     }
 
+    /**
+     *
+     * @param v
+     */
     public void submitClick(View v){
+        if(!playing){
+            String needToPlay = getResources().getString(R.string.start_playing_message);
+            Toast toast = Toast.makeText(getApplicationContext() , needToPlay , Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
+
         endRound();
     }
 
+    /**
+     * Request a new ad to show.
+     */
     private void requestNewInterstitial() {
         /*
         AdRequest adRequest = new AdRequest.Builder()
@@ -481,6 +497,9 @@ public class BinaryBlitz extends Activity {
         mInterstitialAd.loadAd(adRequest);*/
     }
 
+    /**
+     *
+     */
     private void endRound(){
         if(random.nextInt(4) == 1 && mShowAds){
             if (mInterstitialAd.isLoaded()) {
@@ -550,14 +569,18 @@ public class BinaryBlitz extends Activity {
     private void resetLabels(){
         for(int i=0;i<8;i++){
             TextView label = labels.get(i);
-            label.setText((int)Math.pow(2 , 7 - i)+"");
+            String text =(int)Math.pow(2 , 7 - i)+"";
+            label.setText(text);
         }
     }
+
     public void onDestroy(){
         super.onDestroy();
         playing=false;
     }
+
     private AlertDialog dialog;
+
     public void onHelpClick(View v){
         dialog = new AlertDialog.Builder(this).create();
         dialog.setTitle("Instructions");

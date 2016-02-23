@@ -367,7 +367,7 @@
         android:text="@string/start"
         android:id="@+id/button17"
         android:singleLine="false"
-        android:onClick="onPlay"
+        android:onClick="onStart"
             android:layout_marginLeft="160dp"
             android:layout_marginStart="160dp"/>
 

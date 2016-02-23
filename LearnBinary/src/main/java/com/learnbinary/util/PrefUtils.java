@@ -9,12 +9,8 @@ import android.preference.PreferenceManager;
  * Created by ezturner on 8/14/2015.
  */
 public class PrefUtils {
-    public static final String PREFS_LOGIN_USERNAME_KEY = "__USERNAME__" ;
-    public static final String PREFS_LOGIN_PASSWORD_KEY = "__PASSWORD__" ;
-    public static final String PREFS_HAS_OPENED_APP_KEY = "__OPENED__" ;
-    public static final String PREFS_FACEBOOK_ACCESS_TOKEN_KEY = "__FB_ACCESS_TOKEN__";
-    public static final String PREFS_ACCOUNT_TYPE_KEY = "__ACCOUNT_TYPE__";
-    public static final String PREFS_HAS_LOGGED_IN_KEY = "__LOGGED_IN__";
+    public static final String HAS_OPENED_APP = "__OPENED__" ;
+    public static final String DIFFICULTY = "__DIFFICULTY__";
 
     /**
      * Called to save supplied value in shared preferences against given key.

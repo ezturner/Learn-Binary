@@ -27,4 +27,5 @@
     <string name="default_level">Level 0</string>
     <string name="level">Level </string>
     <string name="zero">0</string>
+    <string name="start_playing_message">Press Start to start playing!</string>
 </resources>
