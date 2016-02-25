@@ -21,6 +21,38 @@
         <item name="android:textColorPrimary">@color/white</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="NewTheme" parent="NewTheme.Base">
+
+        <!-- Customize your theme here. -->
+    </style>
+
+
+
+    <style name="NewTheme.Base" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorPrimary">#272727</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/backgroundGrey</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="android:textColor">@color/secondaryText</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:buttonStyle">@style/NewButtonStyle</item>
+        <item name="android:textViewStyle">@style/NewTextViewStyle</item>
+    </style>
+
+    <style name="NewButtonStyle">
+        <item name="android:background">@color/darkGrey</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="NewTextViewStyle">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>

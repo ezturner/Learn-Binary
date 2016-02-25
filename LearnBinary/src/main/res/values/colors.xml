@@ -31,4 +31,6 @@
     <color name="buttonGrey">#4A4A4A</color>
     <color name="buttonGreyPressed">#424242</color>
 
+    <color name="dashboardBackground">#1e1e1e</color>
+    <color name="dashboardDisplay">#303030</color>
 </resources>
