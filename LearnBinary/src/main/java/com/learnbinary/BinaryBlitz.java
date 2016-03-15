@@ -1,5 +1,7 @@
 package com.learnbinary;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.InterstitialAd;
 import com.learnbinary.user.UserPreferences;
@@ -12,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -91,7 +94,7 @@ public class BinaryBlitz extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 
         mContext = this;
-        mShowAds = true;
+        mShowAds = false;
         mLevelsUnlocked = false;
 
         // Load the user preferences.
@@ -200,7 +203,8 @@ public class BinaryBlitz extends Activity {
         }
 
         //The ad code
-        mInterstitialAd = new InterstitialAd(this);
+
+        /*mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-4175241364211124/6773561694");
 
         mInterstitialAd.setAdListener(new AdListener() {
@@ -210,7 +214,7 @@ public class BinaryBlitz extends Activity {
             }
         });
 
-        requestNewInterstitial();
+        requestNewInterstitial();*/
 
         /*
         Bundle ownedItems = null;
@@ -601,9 +605,9 @@ public class BinaryBlitz extends Activity {
         dialog.setTitle("Unlock More Levels!");
         dialog.setMessage("Unlock levels 50+ in the Store!");
 
-        dialog.setButton(DialogInterface.BUTTON_NEUTRAL,"Sure!",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface log,int id) {
-                Intent intent = new Intent(mContext , IAPActivity.class);
+        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Sure!", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface log, int id) {
+                Intent intent = new Intent(mContext, IAPActivity.class);
                 startActivity(intent);
             }
         });
@@ -638,5 +642,30 @@ public class BinaryBlitz extends Activity {
             }
         });
         dialog.show();
+    }
+
+    public void onDifficultyClick(View view){
+        new MaterialDialog.Builder(this)
+                .title(R.string.change_difficulty)
+                .items(R.array.difficulty_array)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        /**
+                         * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
+                         * returning false here won't allow the newly selected radio button to actually be selected.
+                         **/
+                        return true;
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        Log.d(LOG_TAG , materialDialog.getSelectedIndex() + " is index");
+                        difficulty = materialDialog.getSelectedIndex();
+                    }
+                })
+                .positiveText(R.string.choose)
+                .show();
     }
 }

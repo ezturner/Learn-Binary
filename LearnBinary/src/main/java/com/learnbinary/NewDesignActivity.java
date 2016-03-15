@@ -26,8 +26,8 @@ public class NewDesignActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_design);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
     }
 }
