@@ -1,6 +1,6 @@
 <resources>
 
-    <color name="black_overlay">#66000000</color>
+    <color name="black_overlay">#303030</color>
 
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
@@ -26,7 +26,7 @@
     <color name="grey800">#424242</color>
     <color name="grey900">#212121</color>
     <color name="backgroundGrey">#303030</color>
-    <color name="josiahGrey">#1B1B1B</color>
+    <color name="blackGrey">#1B1B1B</color>
 
     <color name="buttonGrey">#4A4A4A</color>
     <color name="buttonGreyPressed">#424242</color>
